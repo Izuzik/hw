@@ -1,0 +1,325 @@
+1.
+<?php
+class User
+{
+    public $name = 'Izuzik';
+    public $login = 'Baursak';
+    public $password = 'shelpek666';
+    public function showInfo(){
+        echo "$this->name | $this->login | $this->password <br/>";
+    }
+}
+
+$user1 = new User;
+$user2 = new User;
+$user3 = new User;
+
+$user1->name = 'Yelzhas';
+$user1->login = 'Swqswq';
+$user1->password = 'shelpek111';
+$user1->showInfo();
+
+$user2->name = 'Akezhan';
+$user2->login = 'AkezhanII';
+$user2->password = 'qwerty';
+$user2->showInfo();
+
+$user3->name = 'Alina';
+$user3->login = 'Alina';
+$user3->password = 'gggg';
+$user3->showInfo();
+2.
+<?php
+class User
+{
+    public $name = 'Izuzik';
+    public $login = 'Baursak';
+    public $password = 'shelpek666';
+    public function showInfo(){
+        echo "$this->name | $this->login | $this->password <br/>";
+    }
+    public function __construct(string $name, string $login, string $password)
+    {
+        $this->name = $name;
+        $this->login = $login;
+        $this->password = $password;
+    }
+    public function _destruct(){
+        echo "Пользователь $this->login удален <br/>";
+    }
+}
+
+$user1 = new User('Yelzhas', 'Yelzhas007', 'parol');
+$user1->showInfo();
+
+$user2 = new User('Akezhan', 'MarII', 'parol2');
+$user2->showInfo();
+
+$user3 = new User('Alina', 'Alina100', 'parol3');
+$user3->showInfo();
+
+$user1->_destruct();
+$user2->_destruct();
+$user3->_destruct();
+
+
+3.
+<?php
+class User
+{
+    public $name = 'Izuzik';
+    public $login = 'Baursak';
+    public $password = 'shelpek666';
+    public function showInfo(){
+        echo "$this->name | $this->login | $this->password <br/>";
+    }
+    public function __construct(string $name, string $login, string $password)
+    {
+        $this->name = $name;
+        $this->login = $login;
+        $this->password = $password;
+    }
+    public function __destruct(){
+        echo "Пользователь $this->login удален <br/>";
+    }
+}
+class SuperUser extends User
+{
+    public $role;
+    public function __construct(string $name, string $login, string $password, string $role)
+    {
+        parent::__construct($name, $login, $password);
+        $this->role = $role;
+    }
+    public function showInfo(){
+        echo "$this->name | $this->login | $this->password | $this->role <br/>";
+    
+    }
+}
+
+$user1 = new User('Yelzhas', 'Yelzhas007', 'parol');
+$user1->showInfo();
+
+$user2 = new User('Akezhan', 'MarII', 'parol2');
+$user2->showInfo();
+
+$user3 = new User('Alina', 'Alina100', 'parol3');
+$user3->showInfo();
+
+$user = new SuperUser('Anuarbekov', 'Baursak', 'Ramil', 'Admin');
+$user->showInfo();
+
+
+4.
+<?php
+abstract class UserAbstract
+{
+    abstract protected function showInfo();
+}
+class User extends UserAbstract
+{
+    public $name = 'Izuzik';
+    public $login = 'Baursak';
+    public $password = 'shelpek666';
+    public function showInfo(){
+        echo "$this->name | $this->login | $this->password <br/>";
+    }
+    public function __construct(string $name, string $login, string $password)
+    {
+        $this->name = $name;
+        $this->login = $login;
+        $this->password = $password;
+    }
+}
+
+interface ISuperUser
+{
+    function getInfo();
+}
+interface IAuthorizeUser
+{
+    function auth($login, $password);
+}
+class SuperUser implements IAuthorizeUser
+{
+    public $name = 'Izuzik';
+    public $login = 'Baursak';
+    public $password = 'shelpek666';
+    public $role;
+    public function __construct(string $name, string $login, string $password, string $role)
+    {
+        $this->name = $name;
+        $this->login = $login;
+        $this->password = $password;
+        $this->role = $role;
+    }
+    public function showInfo(){
+        echo "$this->name | $this->login | $this->password | $this->role <br/>";
+    
+    }
+    function getInfo(){
+        $rc = new ReflectionClass($this);
+        $attributes = $rc->getProperties();
+        
+        $result = [];
+        foreach ($attributes as $attribute) {
+            $name = $attribute->getName();
+            $result[$name] = $this->{$name};
+        }
+        
+        return $result;
+    }
+    function auth($login,$password){
+        if($login == $this->login and $password == $this->password){
+            return true . ' True';
+        }else{
+            return false . ' False';
+        }
+    }
+}
+
+$user1 = new User('Yelzhas', 'Yelzhas007', 'parol');
+$user1->showInfo();
+
+$user2 = new User('Akezhan', 'MarII', 'parol2');
+$user2->showInfo();
+
+$user3 = new User('Alina', 'Alina100', 'parol3');
+$user3->showInfo();
+
+$user = new SuperUser('Anuarbekov', 'Baursak', 'Ramil', 'Admin');
+$user->showInfo();
+
+print_r($user->getInfo());
+
+echo $user->auth('Baursak', 'Ramil');
+echo $user->auth('Philip', 'Ramil');
+
+
+5.
+
+<?php
+abstract class UserAbstract
+{
+    abstract protected function showInfo();
+}
+class User extends UserAbstract
+{
+    public $name = 'Izuzik';
+    public $login = 'Baursak';
+    public $password = 'shelpek666';
+    static $count = 0;
+    public function showInfo(){
+        echo "<br/>Имя: $this->name <br/>Логин: $this->login <br/>Пароль: $this->password<br/>";
+    }
+    public function __construct(string $name, string $login, string $password)
+    {
+        $this->name = $name;
+        $this->login = $login;
+        $this->password = $password;
+        User::$count++;
+    }
+    
+}
+
+interface ISuperUser
+{
+    function getInfo();
+}
+interface IAuthorizeUser
+{
+    function auth($login, $password);
+}
+class SuperUser implements IAuthorizeUser
+{
+    public $name = 'Izuzik';
+    public $login = 'Baursak';
+    public $password = 'shelpek666';
+    public $role;
+    static $count = 0;
+    public function __construct(string $name, string $login, string $password, string $role)
+    {
+        $this->name = $name;
+        $this->login = $login;
+        $this->password = $password;
+        $this->role = $role;
+        SuperUser::$count++;
+    }
+    public function showInfo(){
+        echo "<br/>Имя: $this->name <br/>Логин: $this->login <br/>Пароль: $this->password <br/>Роль: $this->role <br/><br/>";
+    
+    }
+    function getInfo(){
+        $rc = new ReflectionClass($this);
+        $attributes = $rc->getProperties();
+        
+        $result = [];
+        foreach ($attributes as $attribute) {
+            $name = $attribute->getName();
+            $result[$name] = $this->{$name};
+        }
+        
+        return $result;
+    }
+    function auth($login,$password){
+        if($login == $this->login and $password == $this->password){
+            return true . '<br/><br/> True<br/>';
+        }else{
+            return false . ' False<br/><br/>';
+        }
+    }
+    
+}
+
+$user1 = new User('Yelzhas', 'Yelzhas007', 'parol');
+$user1->showInfo();
+
+$user2 = new User('Akezhan', 'MarII', 'parol2');
+$user2->showInfo();
+
+$user3 = new User('Alina', 'Alina100', 'parol3');
+$user3->showInfo();
+
+$user = new SuperUser('Anuarbekov', 'Baursak', 'Ramil', 'Admin');
+$user->showInfo();
+
+print_r($user->getInfo());
+
+echo $user->auth('Baursak', 'Ramil');
+echo $user->auth('Philip', 'Ramil');
+
+$resCountUser = get_class_vars('User');
+echo "Всего обычных пользователей: {$resCountUser['count']}<br>";
+$resCountSuperUser = get_class_vars('SuperUser');
+echo "Всего суперөпользователей: {$resCountSuperUser['count']}<br>";
+
+
+6.
+
+<?php
+spl_autoload_register(function ($class_name) {
+    include 'classes/'.$class_name.'.class.php';
+});
+
+$user1 = new User('Yelzhas', 'Yelzhas007', 'parol');
+$user1->showInfo();
+
+$user2 = new User('Akezhan', 'MarII', 'parol2');
+$user2->showInfo();
+
+$user3 = new User('Alina', 'Alina100', 'parol3');
+$user3->showInfo();
+
+$user = new SuperUser('Anuarbekov', 'Baursak', 'Ramil', 'Admin');
+$user->showInfo();
+
+print_r($user->getInfo());
+
+echo $user->auth('Baursak', 'Ramil');
+echo $user->auth('Philip', 'Ramil');
+
+$resCountUser = get_class_vars('User');
+echo "Всего обычных пользователей: {$resCountUser['count']}<br>";
+$resCountSuperUser = get_class_vars('SuperUser');
+echo "Всего суперөпользователей: {$resCountSuperUser['count']}<br>";
+
